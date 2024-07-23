@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Libary</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+</head>
+<body>
+
+    <h2>ADD BOOK</h2>
+    Book name: <input type="text"id="bookname">
+    Author: <input type="text" id="author">
+    Year: <input type="number" id="year">
+    <button onclick="creatBook()"> Creat </button>
+
+    <h2>ALL BOOK</h2>
+    <button onclick="getBook()"> Get books</button>
+    <div id="bookList"></div>
+
+    <h2> UPDADE BOOK</h2>
+    ID: <input type="number" id="updId"> <br>
+    Book name: <input type="text"id="updateBookName"> <br>
+    Author: <input type="text" id="updateAuthor"> <br>
+    Year: <input type="number" id="updYear"> <br>
+    <button onclick="updateBook()"> Update </button>
+
+    <h2> DELETE BOOK</h2>
+    ID: <input type="number" id="idBook">
+    <button onclick="deleteBook()"> Delete </button>
+
+
+    <script>
+
+    const SERVER = 'http://127.0.0.1:8000/' 
+
+    const creatBook = () => {
+        axios.post(SERVER + 'book_view', {
+            "bookName": bookname.value,
+            "author": author.value,
+            "year":  year.value
+        }).then(res => console.log(res.data))
+    }
+
+    const getBook = () => {
+        axios.get(SERVER + 'book_view')
+            .then(res => {
+                const books = res.data;
+                bookList.innerHTML = ''; // Clear the current list
+                books.forEach(book => {
+                    const bookItem = document.createElement('div');
+                    bookItem.classList.add('book-item');
+                    bookItem.textContent = `ID: ${book.id},Name: ${book.bookName}, Author: ${book.author}, Year: ${book.year}`;
+                    bookList.appendChild(bookItem);
+                });
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    };
+
+    const updateBook = () => {
+        console.log("testtttt upd");
+        const id = updId.value;
+        axios.put(SERVER + 'book_view/' + id, {
+            "bookName": updateBookName.value,
+            "author": updateAuthor.value,
+            "year":  updYear.value
+        }).then(res => console.log(res.data))
+    }
+
+    const deleteBook = () => {
+        console.log("tsetttttttttt");
+        const id = idBook.value;
+        axios.delete(SERVER + 'book_view/' + id).then(res => console.log(`${res.data}, heeeloooooo`))
+    }
+
+    </script>
+</body>
+</html>
